@@ -10,27 +10,67 @@ describe('Buy a t-shirt', () => {
   const productAddedModalPage : ProductAddedModalPage = new ProductAddedModalPage();
   const summaryStepPage: SummaryStepPage = new SummaryStepPage();
   const signInStepPage : SignInStepPage = new SignInStepPage();
-  const adressStepPage : AddressStepPage = new AddressStepPage();
+  const addressStepPage : AddressStepPage = new AddressStepPage();
   const shippingStepPage : ShippingStepPage = new ShippingStepPage();
   const paymentStepPage : PaymentStepPage = new PaymentStepPage();
   const bankPaymentPage : BankPaymentPage = new BankPaymentPage();
   const orderSummaryPage: OrderSummaryPage = new OrderSummaryPage();
 
-  it('then should be bought a t-shirt', async () => {
-    await browser.get('http://automationpractice.com/');
-    await menuContentPage.goToTShirtMenu();
-    await productListPage.addToCart();
-    await productAddedModalPage.goToSummaryStep();
-    await summaryStepPage.goToSignInStep();
-    await signInStepPage.fillSignInData();
-    await signInStepPage.goToAddressStep();
-    await adressStepPage.goToShippingStep();
-    await shippingStepPage.acceptTermsAndConditions();
-    await shippingStepPage.goToPaymentStep();
-    await paymentStepPage.goToBankPayment();
-    await bankPaymentPage.goToOrderSummary();
+  describe('Open the page in browser', () => {
+    it('Open page ', async () => {
+      await browser.get('http://automationpractice.com/');
+    });
+  });
 
-    await expect(await orderSummaryPage.getOrderStatus())
-      .toBe('Your order on My Store is complete.');
+  describe('Selecting t-shirt', () => {
+    it('Go to T-Shirt', async () => {
+      await menuContentPage.goToTShirtMenu();
+    });
+    it('Add product to cart', async () => {
+      await productListPage.addToCart();
+    });
+    it('Go to check out process', async () => {
+      await productAddedModalPage.goToSummaryStep();
+    });
+    it('Continue to login', async () => {
+      await summaryStepPage.goToSignInStep();
+    });
+  });
+
+  describe('Log in process', () => {
+    it('credentials', async () => {
+      await signInStepPage.fillSignInData();
+    });
+
+    it('Continue the check out process to address', async () => {
+      await signInStepPage.goToAddressStep();
+    });
+  });
+
+  describe('Select default address', () => {
+    it('Selecting default address and continue to shipping', async () => {
+      await addressStepPage.goToShippingStep();
+    });
+    it('Accept terms and conditions for shipping', async () => {
+      await shippingStepPage.acceptTermsAndConditions();
+    });
+    it('Continue the check out process to payment process', async () => {
+      await shippingStepPage.goToPaymentStep();
+    });
+  });
+
+  describe('Bank payment', () => {
+    it('Select bank payment', async () => {
+      await paymentStepPage.goToBankPayment();
+    });
+
+    it('Confirm bank payment before order summary', async () => {
+      await bankPaymentPage.goToOrderSummary();
+    });
+
+    it('Confirm the success of the order', async () => {
+      await expect(await orderSummaryPage.getOrderStatus())
+        .toBe('Your order on My Store is complete.');
+    });
   });
 });
